@@ -65,7 +65,9 @@ RUN rustup component add rustfmt-preview
 
 # cbindgen 
 
-RUN cargo install cbindgen --version 0.4.0 && \
+ARG KVIVER_CBINDGEN_VERSION="0.4.3"
+
+RUN cargo install cbindgen --version ${KVIVER_CBINDGEN_VERSION} && \
     rm -rf /root/.cargo/registry
 
 # bindgen
@@ -75,5 +77,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN cargo install bindgen --version 0.32.3 && \
+ARG KVIVER_BINDGEN_VERSION="0.32.3"
+
+RUN cargo install bindgen --version ${KVIVER_BINDGEN_VERSION} && \
     rm -rf /root/.cargo/registry
