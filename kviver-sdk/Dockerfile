@@ -52,13 +52,6 @@ ENV LD_LIBRARY_PATH="/root/.rustup/toolchains/${KVIVER_RUST_TOOLCHAIN}-x86_64-un
 
 RUN rustup component add --toolchain ${KVIVER_RUST_TOOLCHAIN} rust-src
 
-# Xargo
-
-ARG KVIVER_XARGO_VERSION="0.3.10"
-
-RUN cargo install xargo --version ${KVIVER_XARGO_VERSION} && \
-    rm -rf /root/.cargo/registry
-
 # rustfmt
 
 RUN rustup component add rustfmt-preview
