@@ -39,7 +39,7 @@ ENV LD_LIBRARY_PATH="/usr/local/lib:${LD_LIBRARY_PATH}"
 
 # Rust
 
-ARG KVIVER_RUST_TOOLCHAIN="nightly-2018-02-03"
+ARG KVIVER_RUST_TOOLCHAIN="nightly-2018-06-01"
 
 RUN wget https://sh.rustup.rs -O /tmp/rustup-init && \
     bash /tmp/rustup-init --default-toolchain ${KVIVER_RUST_TOOLCHAIN} -y && \
@@ -62,22 +62,3 @@ RUN cargo install xargo --version ${KVIVER_XARGO_VERSION} && \
 # rustfmt
 
 RUN rustup component add rustfmt-preview
-
-# cbindgen 
-
-ARG KVIVER_CBINDGEN_VERSION="0.4.3"
-
-RUN cargo install cbindgen --version ${KVIVER_CBINDGEN_VERSION} && \
-    rm -rf /root/.cargo/registry
-
-# bindgen
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        clang-3.9 \
-    && \
-    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-ARG KVIVER_BINDGEN_VERSION="0.32.3"
-
-RUN cargo install bindgen --version ${KVIVER_BINDGEN_VERSION} && \
-    rm -rf /root/.cargo/registry
