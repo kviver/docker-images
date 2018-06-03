@@ -62,3 +62,10 @@ RUN cargo install xargo --version ${KVIVER_XARGO_VERSION} && \
 # rustfmt
 
 RUN rustup component add rustfmt-preview
+
+# bindgen deps
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        clang-3.9 \
+    && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
