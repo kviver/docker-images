@@ -48,9 +48,10 @@ RUN wget https://sh.rustup.rs -O /tmp/rustup-init && \
 ENV PATH="/root/.cargo/bin:${PATH}"
 ENV LD_LIBRARY_PATH="/root/.rustup/toolchains/${KVIVER_RUST_TOOLCHAIN}-x86_64-unknown-linux-gnu/lib/rustlib/x86_64-unknown-linux-gnu/lib:${LD_LIBRARY_PATH}"
 
-# rust-src, for cross-compiling
+# rust-src and targets, for cross-compiling
 
 RUN rustup component add --toolchain ${KVIVER_RUST_TOOLCHAIN} rust-src
+RUN rustup target add --toolchain ${KVIVER_RUST_TOOLCHAIN} thumbv7em-none-eabihf
 
 # rustfmt
 
