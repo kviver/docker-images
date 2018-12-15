@@ -63,3 +63,44 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         clang-3.9 \
     && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# nRF5 SDK
+# https://www.nordicsemi.com/eng/Products/Bluetooth-low-energy/nRF5-SDK
+
+# TODO merge this unzip with common deps
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        unzip \
+    && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+ARG KVIVER_NRF5_SDK="https://developer.nordicsemi.com/nRF5_SDK/nRF5_SDK_v15.x.x/nRF5_SDK_15.0.0_a53641a.zip"
+
+# TODO remove version from path
+ARG KVIVER_NRF5_HOME="/opt/nRF5_SDK_15.0.0_a53641a"
+
+RUN mkdir /tmp/nRF5_SDK && cd /tmp/nRF5_SDK && \
+	wget ${KVIVER_NRF5_SDK} -O nRF5_SDK.zip && \
+	unzip nRF5_SDK.zip && \
+    rm -rf nRF5_SDK_15.0.0_a53641a/*.msi && \
+    rm -rf nRF5_SDK_15.0.0_a53641a/examples && \
+    mv nRF5_SDK_15.0.0_a53641a ${KVIVER_NRF5_HOME} && \
+	cd / && rm -rf /tmp/nRF5_SDK
+
+RUN apt-get update && \
+	apt-get install -y --no-install-recommends \
+	    automake \
+        autotools-dev \
+        git \
+        libtool \
+        libusb-1.0-0-dev \
+        pkg-config \
+    && \
+	mkdir /tmp/openocd && cd /tmp/openocd && \
+	git clone http://openocd.zylin.com/openocd.git openocd && \
+	cd openocd && \
+	./bootstrap && \
+	./configure --enable-stlink && \
+	make && \
+	make install && \
+	cd / && rm -rf /tmp/openocd && \
+	apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
