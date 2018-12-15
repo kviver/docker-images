@@ -86,6 +86,16 @@ RUN mkdir /tmp/nRF5_SDK && cd /tmp/nRF5_SDK && \
     mv nRF5_SDK_15.0.0_a53641a ${KVIVER_NRF5_HOME} && \
 	cd / && rm -rf /tmp/nRF5_SDK
 
+ARG ARM_GCC_TOOLCHAIN_URL="https://developer.arm.com/-/media/Files/downloads/gnu-rm/6-2017q2/gcc-arm-none-eabi-6-2017-q2-update-linux.tar.bz2"
+
+RUN mkdir /tmp/gcc-arm && \
+    cd /tmp/gcc-arm && \
+    wget ${ARM_GCC_TOOLCHAIN_URL} && \
+    tar xf gcc-arm-none-eabi-6-2017-q2-update-linux.tar.bz2 && \
+    mv gcc-arm-none-eabi-6-2017-q2-update /usr/local/ && \
+    cd /tmp && \
+    rm -rf /tmp/gcc-arm
+
 RUN apt-get update && \
 	apt-get install -y --no-install-recommends \
 	    automake \
