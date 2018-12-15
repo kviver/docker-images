@@ -1,5 +1,5 @@
 #!/bin/bash
 
-VERSION=2018-06-05
+VERSION=nrf5-2018-12-15
 
 docker build -t kviver/sdk:${VERSION} ./kviver-sdk/
