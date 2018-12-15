@@ -39,7 +39,7 @@ ENV LD_LIBRARY_PATH="/usr/local/lib:${LD_LIBRARY_PATH}"
 
 # Rust
 
-ARG KVIVER_RUST_TOOLCHAIN="nightly-2018-06-04"
+ARG KVIVER_RUST_TOOLCHAIN="nightly-2018-12-15"
 
 RUN wget https://sh.rustup.rs -O /tmp/rustup-init && \
     bash /tmp/rustup-init --default-toolchain ${KVIVER_RUST_TOOLCHAIN} -y && \
