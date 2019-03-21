@@ -20,19 +20,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Rust
+# Stable Rust
 
-ARG KVIVER_RUST_TOOLCHAIN="nightly-2018-12-15"
+ARG KVIVER_STABLE_RUST_TOOLCHAIN="1.33.0"
 
 RUN wget https://sh.rustup.rs -O /tmp/rustup-init && \
-    bash /tmp/rustup-init --default-toolchain ${KVIVER_RUST_TOOLCHAIN} -y && \
+    bash /tmp/rustup-init --default-toolchain ${KVIVER_STABLE_RUST_TOOLCHAIN} -y && \
     rm /tmp/rustup-init
 
 ENV PATH="/root/.cargo/bin:${PATH}"
-ENV LD_LIBRARY_PATH="/root/.rustup/toolchains/${KVIVER_RUST_TOOLCHAIN}-x86_64-unknown-linux-gnu/lib/rustlib/x86_64-unknown-linux-gnu/lib:${LD_LIBRARY_PATH}"
+ENV LD_LIBRARY_PATH="/root/.rustup/toolchains/${KVIVER_STABLE_RUST_TOOLCHAIN}-x86_64-unknown-linux-gnu/lib/rustlib/x86_64-unknown-linux-gnu/lib:${LD_LIBRARY_PATH}"
 
-# rust-src and targets, for cross-compiling
+# Unstable Rust with rust-src and targets, for cross-compiling
 
+ARG KVIVER_RUST_TOOLCHAIN="nightly-2019-03-20"
+RUN rustup toolchain install ${KVIVER_RUST_TOOLCHAIN}
 RUN rustup component add --toolchain ${KVIVER_RUST_TOOLCHAIN} rust-src
 RUN rustup target add --toolchain ${KVIVER_RUST_TOOLCHAIN} thumbv7em-none-eabihf
 
