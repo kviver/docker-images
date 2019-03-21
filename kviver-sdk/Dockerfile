@@ -19,24 +19,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# stlink
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        cmake \
-        libusb-1.0-0-dev \
-    && \
-    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-ARG KVIVER_STLINK_VERSION="1.4.0"
-
-RUN mkdir /tmp/stlink && cd /tmp/stlink && \
-    wget https://github.com/texane/stlink/archive/${KVIVER_STLINK_VERSION}.tar.gz && \
-    tar xvf ${KVIVER_STLINK_VERSION}.tar.gz && cd stlink-${KVIVER_STLINK_VERSION} && \
-    make release && cd build/Release && make install && \
-    cd / && rm -rf /tmp/stlink
-
-ENV LD_LIBRARY_PATH="/usr/local/lib:${LD_LIBRARY_PATH}"
-
 # Rust
 
 ARG KVIVER_RUST_TOOLCHAIN="nightly-2018-12-15"
