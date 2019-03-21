@@ -38,9 +38,32 @@ RUN rustup toolchain install ${KVIVER_RUST_TOOLCHAIN}
 RUN rustup component add --toolchain ${KVIVER_RUST_TOOLCHAIN} rust-src
 RUN rustup target add --toolchain ${KVIVER_RUST_TOOLCHAIN} thumbv7em-none-eabihf
 
+# clippy
+
+RUN rustup component add clippy 
+RUN rustup component add clippy --toolchain ${KVIVER_RUST_TOOLCHAIN}
+
 # rustfmt
 
-RUN rustup component add rustfmt-preview
+RUN rustup component add rustfmt 
+RUN rustup component add rustfmt --toolchain ${KVIVER_RUST_TOOLCHAIN}
+
+# cargo tree
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        libssl-dev \
+        pkg-config \
+    && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN cargo install cargo-tree
+
+# cargo expand
+
+RUN cargo install cargo-expand
+
+# cargo call stack
+
+RUN cargo install cargo-call-stack
 
 # bindgen deps
 
