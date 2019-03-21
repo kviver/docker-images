@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # ARM toolchain
 
+# TODO try cargo-binutils with llvm-tools-preview
 RUN apt-get update && apt-get install -y --no-install-recommends \
         gcc-arm-none-eabi \
         gdb-arm-none-eabi \ 
@@ -77,6 +78,8 @@ RUN mkdir /tmp/gcc-arm && \
     mv gcc-arm-none-eabi-6-2017-q2-update /usr/local/ && \
     cd /tmp && \
     rm -rf /tmp/gcc-arm
+
+# OpenOCD
 
 RUN apt-get update && \
 	apt-get install -y --no-install-recommends \
