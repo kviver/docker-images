@@ -10,6 +10,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+# non-root user
+
+RUN addgroup --gid 1000 developer && \
+    adduser --uid 1000 --ingroup developer --home /home/developer --shell /bin/sh --disabled-password --gecos "" developer
+
 # ARM toolchain
 
 # TODO try cargo-binutils with llvm-tools-preview
@@ -22,19 +27,22 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Stable Rust
 
+USER developer:developer
+
 ARG KVIVER_STABLE_RUST_TOOLCHAIN="1.33.0"
 
 RUN wget https://sh.rustup.rs -O /tmp/rustup-init && \
     bash /tmp/rustup-init --default-toolchain ${KVIVER_STABLE_RUST_TOOLCHAIN} -y && \
     rm /tmp/rustup-init
 
-ENV PATH="/root/.cargo/bin:${PATH}"
+ENV PATH="/home/developer/.cargo/bin:${PATH}"
 ENV LD_LIBRARY_PATH="/root/.rustup/toolchains/${KVIVER_STABLE_RUST_TOOLCHAIN}-x86_64-unknown-linux-gnu/lib/rustlib/x86_64-unknown-linux-gnu/lib:${LD_LIBRARY_PATH}"
 
 # Unstable Rust with rust-src and targets, for cross-compiling
 
 ARG KVIVER_RUST_TOOLCHAIN="nightly-2019-03-20"
 RUN rustup toolchain install ${KVIVER_RUST_TOOLCHAIN}
+# TODO maybe rust-src is unnecessary
 RUN rustup component add --toolchain ${KVIVER_RUST_TOOLCHAIN} rust-src
 RUN rustup target add --toolchain ${KVIVER_RUST_TOOLCHAIN} thumbv7em-none-eabihf
 
@@ -50,11 +58,15 @@ RUN rustup component add rustfmt --toolchain ${KVIVER_RUST_TOOLCHAIN}
 
 # cargo tree
 
+USER root:root
+# TODO merge all apt-get
 RUN apt-get update && apt-get install -y --no-install-recommends \
         libssl-dev \
         pkg-config \
     && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+USER developer:developer
+
 RUN cargo install cargo-tree
 
 # cargo expand
@@ -67,13 +79,18 @@ RUN cargo install cargo-call-stack
 
 # bindgen deps
 
+USER root:root
+# TODO merge all apt-get
 RUN apt-get update && apt-get install -y --no-install-recommends \
         clang-3.9 \
     && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+USER developer:developer
 
 # nRF5 SDK
 # https://www.nordicsemi.com/eng/Products/Bluetooth-low-energy/nRF5-SDK
+
+USER root:root
 
 # TODO merge this unzip with common deps
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -124,3 +141,18 @@ RUN apt-get update && \
 	make install && \
 	cd / && rm -rf /tmp/openocd && \
 	apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+USER developer:developer
+
+# fixuid to help with dev environment
+# TODO move this section to separate image, to use clean image in `docker run -it --rm kviver/sdk` as a fast path for debug, and fixuid image in compose
+
+USER root:root
+RUN curl -SsL https://github.com/boxboat/fixuid/releases/download/v0.4/fixuid-0.4-linux-amd64.tar.gz | tar -C /usr/local/bin -xzf - && \
+    chown root:root /usr/local/bin/fixuid && \
+    chmod 4755 /usr/local/bin/fixuid && \
+    mkdir -p /etc/fixuid
+USER developer:developer
+
+ENTRYPOINT ["fixuid"]
+CMD ["bash"]
