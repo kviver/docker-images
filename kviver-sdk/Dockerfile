@@ -44,7 +44,10 @@ ARG KVIVER_RUST_TOOLCHAIN="nightly-2019-03-20"
 RUN rustup toolchain install ${KVIVER_RUST_TOOLCHAIN}
 # TODO maybe rust-src is unnecessary
 RUN rustup component add --toolchain ${KVIVER_RUST_TOOLCHAIN} rust-src
+RUN rustup target add --toolchain ${KVIVER_RUST_TOOLCHAIN} thumbv6m-none-eabi
+RUN rustup target add --toolchain ${KVIVER_RUST_TOOLCHAIN} thumbv7em-none-eabi
 RUN rustup target add --toolchain ${KVIVER_RUST_TOOLCHAIN} thumbv7em-none-eabihf
+RUN rustup target add --toolchain ${KVIVER_RUST_TOOLCHAIN} thumbv7m-none-eabi
 
 # clippy
 
