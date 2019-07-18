@@ -1,4 +1,4 @@
-FROM ubuntu:xenial-20190222
+FROM ubuntu:xenial-20190610
 
 # common deps
 
@@ -29,7 +29,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 USER developer:developer
 
-ARG KVIVER_STABLE_RUST_TOOLCHAIN="1.33.0"
+ARG KVIVER_STABLE_RUST_TOOLCHAIN="1.36.0"
 
 RUN wget https://sh.rustup.rs -O /tmp/rustup-init && \
     bash /tmp/rustup-init --default-toolchain ${KVIVER_STABLE_RUST_TOOLCHAIN} -y && \
@@ -40,7 +40,7 @@ ENV LD_LIBRARY_PATH="/root/.rustup/toolchains/${KVIVER_STABLE_RUST_TOOLCHAIN}-x8
 
 # Unstable Rust with rust-src and targets, for cross-compiling
 
-ARG KVIVER_RUST_TOOLCHAIN="nightly-2019-03-20"
+ARG KVIVER_RUST_TOOLCHAIN="nightly-2019-07-18"
 RUN rustup toolchain install ${KVIVER_RUST_TOOLCHAIN}
 # TODO maybe rust-src is unnecessary
 RUN rustup component add --toolchain ${KVIVER_RUST_TOOLCHAIN} rust-src
