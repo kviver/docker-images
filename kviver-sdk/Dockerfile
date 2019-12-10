@@ -70,15 +70,18 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 USER developer:developer
 
-RUN cargo install cargo-tree
+ARG KVIVER_CARGO_TREE_VERSION="0.27.0"
+RUN cargo install cargo-tree --version ${KVIVER_CARGO_TREE_VERSION}
 
 # cargo expand
 
-RUN cargo install cargo-expand
+ARG KVIVER_CARGO_EXPAND_VERSION="0.4.16"
+RUN cargo install cargo-expand --version ${KVIVER_CARGO_EXPAND_VERSION}
 
 # cargo call stack
 
-RUN cargo install cargo-call-stack
+ARG KVIVER_CARGO_CALL_STACK_VERSION="0.1.4"
+RUN cargo install cargo-call-stack --version ${KVIVER_CARGO_CALL_STACK_VERSION}
 
 # bindgen deps
 
