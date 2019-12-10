@@ -129,6 +129,7 @@ RUN mkdir /tmp/gcc-arm && \
 
 # OpenOCD
 
+ARG KVIVER_OPENOCD_VERSION="1e427fd580ad94bb3bf29d4e02ef81361c920f28"
 RUN apt-get update && \
 	apt-get install -y --no-install-recommends \
 	    automake \
@@ -141,6 +142,7 @@ RUN apt-get update && \
 	mkdir /tmp/openocd && cd /tmp/openocd && \
 	git clone http://openocd.zylin.com/openocd.git openocd && \
 	cd openocd && \
+    git checkout ${KVIVER_OPENOCD_VERSION} && \
 	./bootstrap && \
 	./configure --enable-stlink && \
 	make && \
