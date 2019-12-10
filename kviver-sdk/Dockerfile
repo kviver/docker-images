@@ -155,8 +155,10 @@ USER developer:developer
 # fixuid to help with dev environment
 # TODO move this section to separate image, to use clean image in `docker run -it --rm kviver/sdk` as a fast path for debug, and fixuid image in compose
 
+ARG KVIVER_FIXUID_VERSION="0.4"
+
 USER root:root
-RUN curl -SsL https://github.com/boxboat/fixuid/releases/download/v0.4/fixuid-0.4-linux-amd64.tar.gz | tar -C /usr/local/bin -xzf - && \
+RUN curl -SsL https://github.com/boxboat/fixuid/releases/download/v${KVIVER_FIXUID_VERSION}/fixuid-${KVIVER_FIXUID_VERSION}-linux-amd64.tar.gz | tar -C /usr/local/bin -xzf - && \
     chown root:root /usr/local/bin/fixuid && \
     chmod 4755 /usr/local/bin/fixuid && \
     mkdir -p /etc/fixuid
